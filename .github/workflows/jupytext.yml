@@ -1,0 +1,47 @@
+name: jupytext
+on:
+  schedule:
+    - cron: "0 */6 * * *"
+  push:
+    paths:
+      - ".github/workflows/jupytext.yml"
+      - "update.sh"
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Check
+        run: |
+          rm -rf Differ2026
+          git clone --depth=1 https://github.com/Symbol1/Differ2026.git
+          cd Differ2026
+          if diff --quiet ../commit <(git rev-parse HEAD); then
+            echo "No changes in upstream."
+            exit 0
+          else
+             git rev-parse HEAD > ../commit
+          fi
+          rm -rf .git
+          cd ..
+      - uses: astral-sh/setup-uv@c771a70e6277c0a99b617c7a806ffedaca235ff9 # v9.0.0
+      - name: Install Jupytext
+        run: uv tool install jupytext
+      - name: Jupytext
+        run: ./jupytext.sh
+      - name: Commit and push changes
+        run: |
+          if [ -z "$(git status --porcelain --untracked-files=all)" ]; then
+            echo "No changes to commit."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "$(date -u --iso-8601=seconds)"
+          git push origin main
