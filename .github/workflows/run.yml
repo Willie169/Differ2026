@@ -1,11 +1,12 @@
-name: jupytext
+name: run
 on:
   schedule:
     - cron: "0 */6 * * *"
   push:
     paths:
-      - ".github/workflows/jupytext.yml"
-      - "update.sh"
+      - ".github/workflows/run.yml"
+      - "run.sh"
+      - "commit"
   workflow_dispatch:
 permissions:
   contents: write
@@ -32,8 +33,8 @@ jobs:
       - uses: astral-sh/setup-uv@c771a70e6277c0a99b617c7a806ffedaca235ff9 # v9.0.0
       - name: Install Jupytext
         run: uv tool install jupytext
-      - name: Jupytext
-        run: ./jupytext.sh
+      - name: Run
+        run: ./run.sh
       - name: Commit and push changes
         run: |
           if [ -z "$(git status --porcelain --untracked-files=all)" ]; then

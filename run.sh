@@ -9,3 +9,7 @@ for f in Differ2026/**/*.ipynb; do
     jupytext "$ipynb" --output "$ipynb.md"
   )
 done
+for f in Differ2026/**/*.html; do
+  test -f "$f" || continue
+  cp "$f" "$f.md"
+done
