@@ -22,7 +22,7 @@ jobs:
           rm -rf Differ2026
           git clone --depth=1 https://github.com/Symbol1/Differ2026.git
           cd Differ2026
-          if diff --quiet ../commit <(git rev-parse HEAD); then
+          if diff -q ../commit <(git rev-parse HEAD); then
             echo "No changes in upstream."
             exit 0
           else
