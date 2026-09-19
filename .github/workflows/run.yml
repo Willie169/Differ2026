@@ -18,23 +18,29 @@ jobs:
         with:
           fetch-depth: 0
       - name: Check
+        id: check
         run: |
           rm -rf Differ2026
           git clone --depth=1 https://github.com/Symbol1/Differ2026.git
           cd Differ2026
           if diff -q ../commit <(git rev-parse HEAD); then
             echo "No changes in upstream."
-            exit 0
+            echo "donext=0" >> $GITHUB_OUTPUT
           else
             git rev-parse HEAD > ../commit
             rm -rf .git
+            echo "donext=1" >> $GITHUB_OUTPUT
           fi
       - uses: astral-sh/setup-uv@c771a70e6277c0a99b617c7a806ffedaca235ff9 # v9.0.0
+        if: ( steps.check.outputs.donext == 1 )
       - name: Install Jupytext
+        if: ( steps.check.outputs.donext == 1 )
         run: uv tool install jupytext
       - name: Run
+        if: ( steps.check.outputs.donext == 1 )
         run: ./run.sh
       - name: Commit and push changes
+        if: ( steps.check.outputs.donext == 1 )
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
