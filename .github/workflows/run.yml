@@ -26,10 +26,10 @@ jobs:
             echo "No changes in upstream."
             exit 0
           else
-             git rev-parse HEAD > ../commit
+            git rev-parse HEAD > ../commit
+            rm -rf .git
+            cd ..
           fi
-          rm -rf .git
-          cd ..
       - uses: astral-sh/setup-uv@c771a70e6277c0a99b617c7a806ffedaca235ff9 # v9.0.0
       - name: Install Jupytext
         run: uv tool install jupytext
