@@ -11,7 +11,7 @@ done
 for f in Differ2026/**/*.html; do
   cp "$f" "$f.md"
 done
-for f in Differ2026/**/*.ipynb; do
+for f in Differ2026/**/*.xlsx; do
   (
     cd "$(dirname "$f")" || exit
     file="$(basename "$f")"
