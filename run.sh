@@ -2,7 +2,6 @@
 
 shopt -s globstar nullglob
 for f in Differ2026/**/*.ipynb; do
-  test -f "$f" || continue
   (
     cd "$(dirname "$f")" || exit
     ipynb="$(basename "$f")"
@@ -10,6 +9,6 @@ for f in Differ2026/**/*.ipynb; do
   )
 done
 for f in Differ2026/**/*.html; do
-  test -f "$f" || continue
   cp "$f" "$f.md"
 done
+soffice --convert-to csv:"Text - txt - csv (StarCalc)":44,34,76,1,,,,,,,,-1 Differ2026/**/*.xlsx
